@@ -1,34 +1,39 @@
-  AWSTemplateFormatVersion: 2010-09-09
-  Description: Basic EC2 instance with SecurityGroup allowing SSH inbound access.
-  Resources:
-    InstanceSecurityGroup:
-      Type: AWS::EC2::SecurityGroup
-      Properties:
-        GroupDescription: Allow SSH from the world
-        VpcId: vpc-7e72ed19
-        SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
-          CidrIp: 0.0.0.0/0
-        SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
-          CidrIp: 0.0.0.0/0
+AWSTemplateFormatVersion: 2010-09-09
+Description: Basic EC2 instance with SecurityGroup allowing SSH inbound access.
+Resources:
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow SSH from the world
+      VpcId: vpc-7e72ed19
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '443'
+        ToPort: '443'
+        CidrIp: 0.0.0.0/0
 
-    MyEC2Instance:
-      Type: AWS::EC2::Instance
-      Properties:
-        ImageId: ami-f173cc91
-        InstanceType: t2.micro
-        SecurityGroupIds:
-          - !Ref InstanceSecurityGroup
-        KeyName: dougireton
-        SubnetId: subnet-ef60aba6
-        UserData:
-          Fn::Base64: !Sub |
-           #!/usr/bin/env bash
-           set -o errexit
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-f173cc91
+      InstanceType: t2.micro
+      SecurityGroupIds:
+        - !Ref InstanceSecurityGroup
+      KeyName: dougireton
+      SubnetId: subnet-ef60aba6
+      UserData:
+        Fn::Base64: !Sub |
+         #!/usr/bin/env bash
+         set -o errexit
 
-           yum -y update
+         yum -y update
+
+Outputs:
+  EC2PublicIp:
+    Description: Public IP for instance
+    Value: !GetAtt MyEC2Instance.PublicIp
