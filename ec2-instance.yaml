@@ -1,0 +1,23 @@
+  AWSTemplateFormatVersion: 2010-09-09
+  Description: Basic EC2 instance with SecurityGroup allowing SSH inbound access.
+  Resources:
+    InstanceSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupDescription: Allow SSH from the world
+        VpcId: vpc-7e72ed19
+        SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+
+    MyEC2Instance:
+      Type: AWS::EC2::Instance
+      Properties:
+        ImageId: ami-f173cc91
+        InstanceType: t2.micro
+        SecurityGroupIds:
+          - !Ref InstanceSecurityGroup
+        KeyName: dougireton
+        SubnetId: subnet-ef60aba6
