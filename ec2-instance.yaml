@@ -37,3 +37,5 @@ Outputs:
   EC2PublicIp:
     Description: Public IP for instance
     Value: !GetAtt MyEC2Instance.PublicIp
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicIp"
