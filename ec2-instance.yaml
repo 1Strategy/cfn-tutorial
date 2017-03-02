@@ -21,3 +21,9 @@
           - !Ref InstanceSecurityGroup
         KeyName: dougireton
         SubnetId: subnet-ef60aba6
+        UserData:
+          Fn::Base64: !Sub |
+           #!/usr/bin/env bash
+           set -o errexit
+
+           yum -y update
