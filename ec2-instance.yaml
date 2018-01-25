@@ -1,3 +1,4 @@
+---
 AWSTemplateFormatVersion: 2010-09-09
 Description: Basic EC2 instance with SecurityGroup allowing SSH inbound access.
 
@@ -7,22 +8,21 @@ Parameters:
     Default: t2.micro
     AllowedValues:
       - t2.micro
-      - m1.small
-      - m1.large
+      - m3.small
+      - m5.large
     Description: Enter t2.micro, m1.small, or m1.large. Default is t2.micro.
 
 Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow SSH from the world
+      GroupDescription: Allow SSH and HTTPS
       VpcId: vpc-7e72ed19
       SecurityGroupIngress:
       - IpProtocol: tcp
         FromPort: '22'
         ToPort: '22'
-        CidrIp: 0.0.0.0/0
-      SecurityGroupIngress:
+        CidrIp: 50.47.100.7/32
       - IpProtocol: tcp
         FromPort: '443'
         ToPort: '443'
@@ -37,12 +37,15 @@ Resources:
         - !Ref InstanceSecurityGroup
       KeyName: dougireton
       SubnetId: subnet-ef60aba6
+      Tags:
+        - Key: "Name"
+          Value: "Doug"
       UserData:
         Fn::Base64: !Sub |
          #!/usr/bin/env bash
          set -o errexit
 
-         yum -y update
+         yum -y upgrade
 
 Outputs:
   EC2PublicIp:
